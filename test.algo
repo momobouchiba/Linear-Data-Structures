@@ -1,0 +1,108 @@
+ALGORITHM Sum_Distinct_Elem_Array
+VAR
+    set1 : ARRAY_OF INTEGER[100];
+    set2 : ARRAY_OF INTEGER[100];
+    sum : INTEGER :=0;
+    i,j,N1,N2 :INTEGER;
+    Present :BOOLEAN;
+BEGIN
+    //First table
+    Write("give the length of the first table")
+    Read(N1)
+
+    FOR i FROM 0 TO N1 STEP 1  DO
+        Write("give the element to insert")
+        Read(set1[i])
+    END_FOR
+    //Second table
+    Write("give the length of the second table")
+    Read(N2)
+
+    FOR i FROM 0 TO N2 STEP 1  DO
+        Write("give the element to insert")
+        Read(set2[i])
+    END_FOR
+
+//Traitement SET1
+    FOR i FROM 0 TO set1.length-1 STEP 1  DO
+        Present = False;
+        j :=0;
+        WHILE (j < set2.length) AND (Present = False)  DO
+            IF (set1[i] = set2[j]) THEN
+                Present = true ;
+            ELSE
+                j++;
+            END_IF
+        END_WHILE
+        IF (j = set2.length) THEN
+            sum += set1[i];
+        END_IF
+    END_FOR
+// Traitement SET2
+    FOR i FROM 0 TO set2.length-1 STEP 1  DO
+        Present = False;
+        j :=0;
+        WHILE (j < set1.length) AND (Present = False)  DO
+            IF (set2[i] = set1[j]) THEN
+                Present = true ;
+            ELSE
+                j++;
+            END_IF
+        END_WHILE
+        IF (j = set1.length) THEN
+            sum += set2[i];
+        END_IF
+    END_FOR
+
+    Write("the sum of all distinct elements : "+sum)
+    
+END
+
+ALGORITHM Sum_Distinct_Elem_HashTable
+VAR
+    set1 : ARRAY_OF INTEGER[100];
+    set2 : ARRAY_OF INTEGER[100];
+    htab : HASH_TABLE<INTEGER,INTEGER>;
+    N1,N2,i : INTEGER;
+    count,sum : INTEGER := 0;
+BEGIN
+    //First table
+    Write("give the length of the first table")
+    Read(N1)
+    FOR i FROM 0 TO N1 STEP 1  DO
+        Write("give the element to insert")
+        Read(set1[i])
+    END_FOR
+    //Second table
+    Write("give the length of the second table")
+    Read(N2)
+    FOR i FROM 0 TO N2 STEP 1  DO
+        Write("give the element to insert")
+        Read(set2[i])
+    END_FOR
+//SET 1
+    FOR i FROM 0 TO set1.length-1 STEP 1  DO
+        IF (htab.lookup(set1[i])) THEN
+            count := htab.get(set1[i]);
+            htab.insert(set1[i],count+1);
+        ELSE
+            htab.insert(set1[i],1);
+        END_IF
+    END_FOR
+//SET 2
+    FOR i FROM 0 TO set2.length-1 STEP 1  DO
+        IF (htab.lookup(set2[i])) THEN
+            count := htab.get(set2[i]);
+            htab.insert(set2[i],count+1);
+        ELSE
+            htab.insert(set2[i],1);
+        END_IF
+    END_FOR
+    // the hash table 
+    FOR i FROM 0 TO htab.length-1 STEP 1  DO
+        IF ( htab.get(htab[i]) = 1) THEN
+            sum+= htab[i];
+        END_IF
+    END_FOR
+    Write("the sum of all distinct elements : "+sum)
+END
